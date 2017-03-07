@@ -31,9 +31,14 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 public class BlobPipeline {
 	
 	NetworkTable table;
+	Mat blankMat;
 	
 	static final String SELECTION="Selection";
 	static final String OUTPUT_CONTROL="Select view";
+	
+
+	Mat blankFrame= new Mat();
+	boolean isFirst=true;
 	
 	public BlobPipeline(String tableString){
 		this.table=NetworkTable.getTable(tableString);
@@ -59,7 +64,12 @@ public class BlobPipeline {
 		double[] rgbThresholdGreen = {252.24820143884892, 255.0};
 		double[] rgbThresholdBlue = {0.0, 255.0};
 		rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, rgbThresholdOutput);
-
+		if(isFirst){
+			double[] rgbThresholdRed2 = {0.0, 0.0};
+			double[] rgbThresholdGreen2 = {0, 0.0};
+			double[] rgbThresholdBlue2 = {0.0, 0.0};
+			rgbThreshold(rgbThresholdInput, rgbThresholdRed2, rgbThresholdGreen2, rgbThresholdBlue2, blankFrame);
+		}
 		// Step Find_Blobs0:
 		Mat findBlobsInput = rgbThresholdOutput;
 		double findBlobsMinArea = 10;
@@ -170,8 +180,10 @@ public class BlobPipeline {
 		default:
 			return rgbThresholdOutput();
 		case "2":
+			Mat mat2=new Mat();
+			blankFrame.copyTo(mat2);
 			keypoints = findBlobsOutput();
-			Features2d.drawKeypoints(mat, keypoints, mat,new Scalar(2,254,255),Features2d.DRAW_RICH_KEYPOINTS);
+			Features2d.drawKeypoints(mat2, keypoints, mat2,new Scalar(2,254,255),Features2d.DRAW_RICH_KEYPOINTS);
 			return mat;
 		}
 	}

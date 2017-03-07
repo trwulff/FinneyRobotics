@@ -317,12 +317,13 @@ public class GearPipeline {
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 		
 	//  Create a blank (black) Mat	
-		
+		if(isFirst){
 		double[] hsvThresholdHueBlank = {hsvThresholdHueLow,hsvThresholdHueHigh};
 		double[] hsvThresholdSaturationBlank ={ hsvThresholdSaturationLow,hsvThresholdSaturationHigh};
 		double[] hsvThresholdValueBlank = {0,0};
 		hsvThreshold(hsvThresholdInput,hsvThresholdHueBlank,hsvThresholdSaturationBlank,hsvThresholdValueBlank,blankFrame);
-		
+		isFirst=false;
+		}
 
 		if(DriverStation.getInstance().isDisabled()){
 			erodeBoarder=table.getString(ERODE_BOARDER, DEF_ERODE_BOARDER);
@@ -409,7 +410,8 @@ public class GearPipeline {
 	 * @return ArrayList<MatOfPoint> output from Find_Contours.
 	 */
 	public Mat findContoursOutput() {
-		Mat mat=blankFrame;
+		Mat mat=new Mat();
+		blankFrame.copyTo(mat);
 		Imgproc.drawContours(mat, findContoursOutput, -1, new Scalar(255,255,255));
 		
 		return mat;
