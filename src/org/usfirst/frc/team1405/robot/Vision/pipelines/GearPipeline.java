@@ -42,33 +42,34 @@ public class GearPipeline {
 	static final String BOARDER_DEFAULT="BOARDER_DEFAULT";
 	static final String BOARDER_ISOLATED="BOARDER_ISOLATED";
 
+	//Defaults for gear pickup
 
 	double DEF_HSV_THRESHOLD_HUE_LOW=0;
-	double DEF_HSV_THRESHOLD_HUE_HIGH=180;
-	double DEF_HSV_THRESHOLD_SATURATION_LOW=0;
-	double DEF_HSV_THRESHOLD_SATURATION_HIGH=255;
-	double DEF_HSV_THRESHOLD_VALUE_LOW=240;
+	double DEF_HSV_THRESHOLD_HUE_HIGH=50;
+	double DEF_HSV_THRESHOLD_SATURATION_LOW=25;
+	double DEF_HSV_THRESHOLD_SATURATION_HIGH=100;
+	double DEF_HSV_THRESHOLD_VALUE_LOW=200;
 	double DEF_HSV_THRESHOLD_VALUE_HIGH=255;
 	
 
 	String DEF_ERODE_BOARDER=BOARDER_CONSTANT;		
-	double DEF_ERODE_ITERATIONS=1;	
+	double DEF_ERODE_ITERATIONS=0;	
 	String DEF_DILATE_BOARDER=BOARDER_CONSTANT;		
-	double DEF_DILATE_ITERATIONS=2;
+	double DEF_DILATE_ITERATIONS=3;
 	
 
-	double DEF_FILTER_CONTOURS_MIN_AREA=0;	
+	double DEF_FILTER_CONTOURS_MIN_AREA=20;	
 	double DEF_FILTER_CONTOURS_MIN_PERIMETER=0;
-	double DEF_FILTER_CONTOURS_MIN_WIDTH=0;
-	double DEF_FILTER_CONTOURS_MAX_WIDTH=1000;
-	double DEF_FILTER_CONTOURS_MIN_HEIGHT=0;
-	double DEF_FILTER_CONTOURS_MAX_HEIGHT=1000;
+	double DEF_FILTER_CONTOURS_MIN_WIDTH=10;
+	double DEF_FILTER_CONTOURS_MAX_WIDTH=15;
+	double DEF_FILTER_CONTOURS_MIN_HEIGHT=5;
+	double DEF_FILTER_CONTOURS_MAX_HEIGHT=20;
 	double DEF_FILTER_CONTOURS_SOLIDITY_LOW=50;
-	double DEF_FILTER_CONTOURS_SOLIDITY_HIGH=100000;
-	double DEF_FILTER_CONTOURS_MIN_VERTICES=0;
-	double DEF_FILTER_CONTOURS_MAX_VERTICES=10000;
-	double DEF_FILTER_CONTOURS_MIN_RATIO=1;
-	double DEF_FILTER_CONTOURS_MAX_RATIO=5;
+	double DEF_FILTER_CONTOURS_SOLIDITY_HIGH=100;
+	double DEF_FILTER_CONTOURS_MIN_VERTICES=4;
+	double DEF_FILTER_CONTOURS_MAX_VERTICES=8;
+	double DEF_FILTER_CONTOURS_MIN_RATIO=0;
+	double DEF_FILTER_CONTOURS_MAX_RATIO=0.75;
 	
 	// END Default values
 	
@@ -411,7 +412,7 @@ public class GearPipeline {
 	 */
 	public Mat findContoursOutput() {
 		Mat mat=new Mat();
-		blankFrame.copyTo(mat);
+		mat=blankFrame.clone();
 		Imgproc.drawContours(mat, findContoursOutput, -1, new Scalar(255,255,255));
 		
 		return mat;
@@ -422,7 +423,7 @@ public class GearPipeline {
 	 * @return ArrayList<MatOfPoint> output from Filter_Contours.
 	 */
 	public Mat filterContoursOutput() {
-		Mat mat=blankFrame;
+		Mat mat=blankFrame.clone();
 		Imgproc.drawContours(mat, filterContoursOutput, -1, new Scalar(255,255,255));
 		return mat;
 	}
@@ -597,10 +598,10 @@ public class GearPipeline {
 		width=new double[output.size()];
 		height=new double[output.size()];
 		for(int i=0;i<output.size();i++){
-			boolean anotherInRange = false;
+			boolean anotherInRange = true;
 			int xRange = 5;
 			int yRange = 20;
-			
+/*			
 			//check if any other box is in the x range of this box
 			for(int j=0;j<output.size();j++){
 				if(j != i){
@@ -613,7 +614,7 @@ public class GearPipeline {
 					}
 				}
 			}
-			
+			*/
 //			System.out.println("filtered index: " + filteredIndex + " i: " + i + " tmp x length: " + tmpX.length + " tmp width length: " + tmpWidth.length);
 			if(anotherInRange){
 				centerX[filteredIndex]=tmpX[i]+(tmpWidth[i]/2);

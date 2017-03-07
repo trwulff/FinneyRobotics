@@ -171,14 +171,14 @@ public class Vision2017 {
 				
 				// Put a rectangle on the image
 				if(!mat.empty()){
-//				gearPipeline.process(mat);
+				gearPipeline.process(mat);
 					
-				blobPipeline.process(mat);
-//					outputStream.putFrame(gearPipeline.selectedOutput());
+//				blobPipeline.process(mat);
+					outputStream.putFrame(gearPipeline.selectedOutput());
 //					Mat myMat = gearPipeline.selectedOutput();
 //					outputStream.putFrame(blobPipeline.rgbThresholdOutput());
 				
-					outputStream.putFrame(blobPipeline.selectedOutput(mat));
+//					outputStream.putFrame(blobPipeline.selectedOutput(mat));
 				}
 			}
 		});

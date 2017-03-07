@@ -69,11 +69,12 @@ public class BlobPipeline {
 			double[] rgbThresholdGreen2 = {0, 0.0};
 			double[] rgbThresholdBlue2 = {0.0, 0.0};
 			rgbThreshold(rgbThresholdInput, rgbThresholdRed2, rgbThresholdGreen2, rgbThresholdBlue2, blankFrame);
+			isFirst=false;
 		}
 		// Step Find_Blobs0:
 		Mat findBlobsInput = rgbThresholdOutput;
-		double findBlobsMinArea = 10;
-		double[] findBlobsCircularity = {0.0, 1.0};
+		double findBlobsMinArea = 0;
+		double[] findBlobsCircularity = {0.0, 100.0};
 		boolean findBlobsDarkBlobs = false;
 		findBlobs(findBlobsInput, findBlobsMinArea, findBlobsCircularity, findBlobsDarkBlobs, findBlobsOutput);
 
@@ -184,7 +185,7 @@ public class BlobPipeline {
 			blankFrame.copyTo(mat2);
 			keypoints = findBlobsOutput();
 			Features2d.drawKeypoints(mat2, keypoints, mat2,new Scalar(2,254,255),Features2d.DRAW_RICH_KEYPOINTS);
-			return mat;
+			return mat2;
 		}
 	}
 
