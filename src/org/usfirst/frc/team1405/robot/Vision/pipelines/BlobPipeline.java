@@ -172,7 +172,7 @@ public class BlobPipeline {
 		blobDet.detect(input, blobList);
 	}
 
-	public Mat selectedOutput(Mat mat){
+	public Mat selectedOutput(){
 		MatOfKeyPoint keypoints;
 		
 		switch(table.getString(OUTPUT_CONTROL+"/"+SELECTION, "1")){

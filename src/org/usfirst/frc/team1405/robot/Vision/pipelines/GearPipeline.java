@@ -123,8 +123,8 @@ public class GearPipeline {
 	static final String FILTER_CONTOURS_SOLIDITY_HIGH="Filter Contours/Solidity (High)";
 	static final String FILTER_CONTOURS_MIN_VERTICES="Filter Contours/Min Vertices";
 	static final String FILTER_CONTOURS_MAX_VERTICES="Filter Contours/Max Vertices";
-	static final String FILTER_CONTOURS_MIN_RATIO="Filter Contours/Min Ratio(width/height)";
-	static final String FILTER_CONTOURS_MAX_RATIO="Filter Contours/Max Ratio(width/height)";
+	static final String FILTER_CONTOURS_MIN_RATIO="Filter Contours/Min Ratio(width|height)";
+	static final String FILTER_CONTOURS_MAX_RATIO="Filter Contours/Max Ratio(width|height)";
 	static final String FIND_FILTERS_COUNT="Filter Contours/Find Contours Count";
 	static final String FILTER_CONTOURS_COUNT="Filter Contours/Filters Contours Count";
 	static final String FILTER_CONTOURS_CENTER_X="Filter Contours/Filters Contours X Center";

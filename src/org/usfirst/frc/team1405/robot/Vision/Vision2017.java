@@ -12,6 +12,7 @@ import org.opencv.core.MatOfKeyPoint;
 import org.opencv.core.Scalar;
 import org.opencv.features2d.Features2d;
 import org.opencv.imgproc.Imgproc;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
@@ -21,12 +22,13 @@ import org.usfirst.frc.team1405.robot.Vision.pipelines.GearPipeline;
 public class Vision2017 {
 	static final String GEAR_PLACEMENT_TABLE_NAME="Robot/Vision/Pipelines/Gear Placement";
 	static final String SHOOTING_BLOB="Robot/Vision/Pipelines/Shooting Blob";
+	static final String SELECT_PIPELINE="Robot/Vision/Pipelines";
+	static final String PIPELINE_ID_KEY="Gear Placement=0, Shooting Blob = 1";
 	static Thread visionThread;
 	static GearPipeline gearPipeline=new GearPipeline(GEAR_PLACEMENT_TABLE_NAME);
 	static BlobPipeline blobPipeline = new BlobPipeline(SHOOTING_BLOB);
-	static NetworkTable table;
 	static String CAMERA_ID_KEY3="Pipelines/Gear Placement/"+"Select Gear camera ID (0, 1, 2)";
-	static String CAMERA_ID_KEY2="Pipelines/Gear Placement/"+"Select gear camera ID (0, 1)";
+	static String CAMERA_ID_KEY2="Pipelines/Gear Placement/"+"Select Gear camera ID (0, 1)";
 	static String CAMERA_ID_KEY=CAMERA_ID_KEY3;
 	static final int VERT_RES=120;
 	static final int HOR_RES=160;
@@ -51,6 +53,8 @@ public class Vision2017 {
 	static boolean enableCameraSwitch=true;
 	
 	static String cameraID="0";
+	static NetworkTable table;
+	static String pipelineID="0";
 
 	static Mat rgb = new Mat();
 	static Mat outputImage = new Mat();
@@ -90,11 +94,14 @@ public class Vision2017 {
 		table=NetworkTable.getTable("Robot/Vision");
 		if(enableCameraSwitch){
 		cameraID=table.getString(CAMERA_ID_KEY,"0");
+		
 		table.setPersistent(CAMERA_ID_KEY);
 		if(cameraID=="2"&&!enableCamera2)cameraID="0";
 		if(!enableCamera1&&!enableCamera2)cameraID="0";
 		table.putString(CAMERA_ID_KEY, cameraID);
 		}
+		pipelineID=table.getString(PIPELINE_ID_KEY,pipelineID);
+		table.putString(PIPELINE_ID_KEY, PIPELINE_ID_KEY);
 		visionThread = new Thread(() -> {
 			camera[0]=CameraServer.getInstance().startAutomaticCapture(0);
 			camera[0].setResolution(HOR_RES, VERT_RES);
@@ -174,11 +181,19 @@ public class Vision2017 {
 				gearPipeline.process(mat);
 					
 //				blobPipeline.process(mat);
-					outputStream.putFrame(gearPipeline.selectedOutput());
-//					Mat myMat = gearPipeline.selectedOutput();
-//					outputStream.putFrame(blobPipeline.rgbThresholdOutput());
-				
-//					outputStream.putFrame(blobPipeline.selectedOutput(mat));
+				if(DriverStation.getInstance().isDisabled()){
+					Mat selectedOutput;
+					switch(pipelineID){
+					default:
+					case "0":
+						selectedOutput=gearPipeline.selectedOutput();
+						break;
+					case "1":
+						selectedOutput=blobPipeline.selectedOutput();
+						break;
+					}
+					outputStream.putFrame(selectedOutput);
+				}
 				}
 			}
 		});
@@ -195,6 +210,13 @@ public class Vision2017 {
 			table.putString(CAMERA_ID_KEY,"1");
 		}
 	}
+	}
+	
+	public static void autonomousInit(){
+		
+	}	
+	public static void telropInit(){
+		
 	}
 
 }
