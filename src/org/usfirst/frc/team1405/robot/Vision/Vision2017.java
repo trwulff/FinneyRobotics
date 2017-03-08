@@ -23,7 +23,7 @@ public class Vision2017 {
 	static final String GEAR_PLACEMENT_TABLE_NAME="Robot/Vision/Pipelines/Gear Placement";
 	static final String SHOOTING_BLOB="Robot/Vision/Pipelines/Shooting Blob";
 	static final String SELECT_PIPELINE="Robot/Vision/Pipelines";
-	static final String PIPELINE_ID_KEY="Gear Placement=0, Shooting Blob = 1";
+	static final String PIPELINE_ID_KEY="Select (Gear Placement=0, Shooting Blob = 1)";
 	static Thread visionThread;
 	static GearPipeline gearPipeline=new GearPipeline(GEAR_PLACEMENT_TABLE_NAME);
 	static BlobPipeline blobPipeline = new BlobPipeline(SHOOTING_BLOB);
@@ -101,7 +101,7 @@ public class Vision2017 {
 		table.putString(CAMERA_ID_KEY, cameraID);
 		}
 		pipelineID=table.getString(PIPELINE_ID_KEY,pipelineID);
-		table.putString(PIPELINE_ID_KEY, PIPELINE_ID_KEY);
+		table.putString(PIPELINE_ID_KEY, pipelineID);
 		visionThread = new Thread(() -> {
 			camera[0]=CameraServer.getInstance().startAutomaticCapture(0);
 			camera[0].setResolution(HOR_RES, VERT_RES);

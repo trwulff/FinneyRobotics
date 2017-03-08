@@ -32,6 +32,34 @@ public class BlobPipeline {
 	
 	NetworkTable table;
 	Mat blankMat;
+//Defaults
+	static final double[] DEF_RGB_THRESHOLD_RED={0,255};
+	static final double[] DEF_RGB_THRESHOLD_GREEN={252.24820143884892,255};
+	static final double[] DEF_RGB_THRESHOLD_BLUE={0,255};
+
+	static final double DEF_FIND_BLOBS_MIN_AREA=0;
+	static final double[] DEF_FIND_BLOBS_CIRCULARITY={0,100};
+	static final boolean DEF_FIND_BLOBS_DARK_BLOBS=false;
+//End Defaults	
+
+//Keys
+	static final String KEY_RGB_THRESHOLD_RED="RGB Thhreshole/Red {min,max}";
+	static final String KEY_RGB_THRESHOLD_GREEN="RGB Thhreshole/Green {min,max}";
+	static final String KEY_RGB_THRESHOLD_BLUE="RGB Thhreshole/Blue {min,max}";
+
+	static final String KEY_FIND_BLOBS_MIN_AREA="Find Blobs/Min area";
+	static final String KEY_FIND_BLOBS_CIRCULARITY="Find Blobs/Circularity {min,max}";
+	static final String KEY_FIND_BLOBS_DARK_BLOBS="Find Blobs/Dark Blobs";
+//End Keys
+
+	double[] rgbThresholdRed = DEF_RGB_THRESHOLD_RED;
+	double[] rgbThresholdGreen = DEF_RGB_THRESHOLD_GREEN;
+	double[] rgbThresholdBlue = DEF_RGB_THRESHOLD_BLUE;
+	
+
+	double findBlobsMinArea = DEF_FIND_BLOBS_MIN_AREA;
+	double[] findBlobsCircularity = DEF_FIND_BLOBS_CIRCULARITY;
+	boolean findBlobsDarkBlobs = DEF_FIND_BLOBS_DARK_BLOBS;
 	
 	static final String SELECTION="Selection";
 	static final String OUTPUT_CONTROL="Select view";
@@ -43,6 +71,24 @@ public class BlobPipeline {
 	public BlobPipeline(String tableString){
 		this.table=NetworkTable.getTable(tableString);
 		table.putString(OUTPUT_CONTROL+"/"+SELECTION, "1");
+		
+		rgbThresholdRed = table.getNumberArray(KEY_RGB_THRESHOLD_RED, rgbThresholdRed);
+		rgbThresholdGreen = table.getNumberArray(KEY_RGB_THRESHOLD_GREEN, rgbThresholdGreen);
+		rgbThresholdBlue = table.getNumberArray(KEY_RGB_THRESHOLD_BLUE, rgbThresholdBlue);
+		
+
+		findBlobsMinArea = table.getNumber(KEY_FIND_BLOBS_MIN_AREA, findBlobsMinArea);
+		findBlobsCircularity = table.getNumberArray(KEY_FIND_BLOBS_CIRCULARITY, findBlobsCircularity);
+		findBlobsDarkBlobs = table.getBoolean(KEY_FIND_BLOBS_DARK_BLOBS, findBlobsDarkBlobs);	
+		
+		table.putNumberArray(KEY_RGB_THRESHOLD_RED, rgbThresholdRed);
+		table.putNumberArray(KEY_RGB_THRESHOLD_GREEN, rgbThresholdGreen);
+		table.putNumberArray(KEY_RGB_THRESHOLD_BLUE, rgbThresholdBlue);
+		
+
+		table.putNumber(KEY_FIND_BLOBS_MIN_AREA, findBlobsMinArea);
+		table.putNumberArray(KEY_FIND_BLOBS_CIRCULARITY, findBlobsCircularity);
+		table.putBoolean(KEY_FIND_BLOBS_DARK_BLOBS, findBlobsDarkBlobs);
 		
 	}
 
@@ -60,9 +106,19 @@ public class BlobPipeline {
 	public void process(Mat source0) {
 		// Step RGB_Threshold0:
 		Mat rgbThresholdInput = source0;
-		double[] rgbThresholdRed = {0.0, 255.0};
-		double[] rgbThresholdGreen = {252.24820143884892, 255.0};
-		double[] rgbThresholdBlue = {0.0, 255.0};
+		if(DriverStation.getInstance().isDisabled()){
+			
+			rgbThresholdRed = table.getNumberArray(KEY_RGB_THRESHOLD_RED, rgbThresholdRed);
+			rgbThresholdGreen = table.getNumberArray(KEY_RGB_THRESHOLD_GREEN, rgbThresholdGreen);
+			rgbThresholdBlue = table.getNumberArray(KEY_RGB_THRESHOLD_BLUE, rgbThresholdBlue);
+			
+
+			findBlobsMinArea = table.getNumber(KEY_FIND_BLOBS_MIN_AREA, findBlobsMinArea);
+			findBlobsCircularity = table.getNumberArray(KEY_FIND_BLOBS_CIRCULARITY, findBlobsCircularity);
+			findBlobsDarkBlobs = table.getBoolean(KEY_FIND_BLOBS_DARK_BLOBS, findBlobsDarkBlobs);	
+			
+			
+		}
 		rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, rgbThresholdOutput);
 		if(isFirst){
 			double[] rgbThresholdRed2 = {0.0, 0.0};
@@ -73,9 +129,6 @@ public class BlobPipeline {
 		}
 		// Step Find_Blobs0:
 		Mat findBlobsInput = rgbThresholdOutput;
-		double findBlobsMinArea = 0;
-		double[] findBlobsCircularity = {0.0, 100.0};
-		boolean findBlobsDarkBlobs = false;
 		findBlobs(findBlobsInput, findBlobsMinArea, findBlobsCircularity, findBlobsDarkBlobs, findBlobsOutput);
 
 	}
