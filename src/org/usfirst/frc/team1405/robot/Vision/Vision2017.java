@@ -20,16 +20,45 @@ import org.usfirst.frc.team1405.robot.Vision.pipelines.BlobPipeline;
 import org.usfirst.frc.team1405.robot.Vision.pipelines.GearPipeline;
 
 public class Vision2017 {
-	static final String GEAR_PLACEMENT_TABLE_NAME="Robot/Vision/Pipelines/Gear Placement";
-	static final String SHOOTING_BLOB="Robot/Vision/Pipelines/Shooting Blob";
-	static final String SELECT_PIPELINE="Robot/Vision/Pipelines";
-	static final String PIPELINE_ID_KEY="Select (Gear Placement=0, Shooting Blob = 1)";
-	static Thread visionThread;
-	static GearPipeline gearPipeline=new GearPipeline(GEAR_PLACEMENT_TABLE_NAME);
-	static BlobPipeline blobPipeline = new BlobPipeline(SHOOTING_BLOB);
+	//Defaults
+	
+	//End Defaults
+	
+	//Keys
+	static final String MAIN_TABLE="Robot/Vision";
+
 	static String CAMERA_ID_KEY3="Pipelines/Gear Placement/"+"Select Gear camera ID (0, 1, 2)";
 	static String CAMERA_ID_KEY2="Pipelines/Gear Placement/"+"Select Gear camera ID (0, 1)";
 	static String CAMERA_ID_KEY=CAMERA_ID_KEY3;
+	
+	static final String GEAR_PLACEMENT_TABLE_NAME="Robot/Vision/Pipelines/Gear Placement";
+	static final String SHOOTING_BLOB="Robot/Vision/Pipelines/Shooting Blob";
+	static final String SELECT_PIPELINE="Robot/Vision/Pipelines";
+	static final String PIPELINE_ID_KEY=SELECT_PIPELINE+"/"+"Select (Gear Placement=0, Shooting Blob = 1)";
+	
+	static final String CAMERA_0_AUTOEXPOSURE="/Cameras/Camera 0/Enable Autoexposure";	
+	static final String CAMERA_0_AUTO_WHITE_BALLANCE="/Cameras/Camera 0/Enable Auto White Ballance";
+	static final String CAMERA_0_BRIGHTNESS="/Cameras/Camera 0/Brightness";	
+	static final String CAMERA_0_WHITE_BALLANCE="/Cameras/Camera 0/White Ballance";
+	static final String CAMERA_0_EXPOSURE="/Cameras/Camera 0/White Ballance";	
+	
+	static final String CAMERA_1_AUTOEXPOSURE="/Cameras/Camera 0/Enable Autoexposure";	
+	static final String CAMERA_1_AUTO_WHITE_BALLANCE="/Cameras/Camera 0/Enable Auto White Ballance";
+	static final String CAMERA_1_BRIGHTNESS="/Cameras/Camera 0/Brightness";	
+	static final String CAMERA_1_WHITE_BALLANCE="/Cameras/Camera 0/White Ballance";
+	static final String CAMERA_1_EXPOSURE="/Cameras/Camera 0/White Ballance";
+	
+	static final String CAMERA_2_AUTOEXPOSURE="/Cameras/Camera 0/Enable Autoexposure";	
+	static final String CAMERA_2_AUTO_WHITE_BALLANCE="/Cameras/Camera 0/Enable Auto White Ballance";
+	static final String CAMERA_2_BRIGHTNESS="/Cameras/Camera 0/Brightness";	
+	static final String CAMERA_2_WHITE_BALLANCE="/Cameras/Camera 0/White Ballance";
+	static final String CAMERA_2_EXPOSURE="/Cameras/Camera 0/White Ballance";
+	// End Keys
+	
+	
+	static Thread visionThread;
+	static GearPipeline gearPipeline=new GearPipeline(GEAR_PLACEMENT_TABLE_NAME);
+	static BlobPipeline blobPipeline = new BlobPipeline(SHOOTING_BLOB);
 	static final int VERT_RES=120;
 	static final int HOR_RES=160;
 
@@ -91,7 +120,7 @@ public class Vision2017 {
 	
 	
 	static public void robotInit(){
-		table=NetworkTable.getTable("Robot/Vision");
+		table=NetworkTable.getTable(MAIN_TABLE);
 		if(enableCameraSwitch){
 		cameraID=table.getString(CAMERA_ID_KEY,"0");
 		
