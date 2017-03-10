@@ -21,7 +21,21 @@ import org.usfirst.frc.team1405.robot.Vision.pipelines.GearPipeline;
 
 public class Vision2017 {
 	//Defaults
+	static final boolean DEF_AUTO_CAMERA_X_AUTOEXPOSURE=true;	
+	static final boolean DEF_AUTO_CAMERA_X_AUTO_WHITE_BALLANCE=true;
+	static final double DEF_AUTO_CAMERA_X_BRIGHTNESS=0;	
+	static final double DEF_AUTO_CAMERA_X_WHITE_BALLANCE=0;
+	static final double DEF_AUTO_CAMERA_X_EXPOSURE=0;	
 	
+	static final boolean DEF_TELEOP_CAMERA_X_AUTOEXPOSURE=true;	
+	static final boolean DEF_TELEOP_CAMERA_X_AUTO_WHITE_BALLANCE=true;
+	static final double DEF_TELEOP_CAMERA_X_BRIGHTNESS=0;	
+	static final double DEF_TELEOP_CAMERA_X_WHITE_BALLANCE=0;
+	static final double DEF_TELEOP_CAMERA_X_EXPOSURE=0;	
+
+	static final String DEF_SET_CAMERA_X_PARAMETERS="1";
+
+
 	//End Defaults
 	
 	//Keys
@@ -35,26 +49,22 @@ public class Vision2017 {
 	static final String SHOOTING_BLOB="Robot/Vision/Pipelines/Shooting Blob";
 	static final String SELECT_PIPELINE="Robot/Vision/Pipelines";
 	static final String PIPELINE_ID_KEY=SELECT_PIPELINE+"/"+"Select (Gear Placement=0, Shooting Blob = 1)";
+
+	static final String AUTO_CAMERA_X_AUTOEXPOSURE="/Selected Camera/Autonomous/Enable Autoexposure";	
+	static final String AUTO_CAMERA_X_AUTO_WHITE_BALLANCE="/Selected Camera/Autonomous/Enable Auto White Ballance";
+	static final String AUTO_CAMERA_X_BRIGHTNESS="/Selected Camera/Autonomous/Brightness";	
+	static final String AUTO_CAMERA_X_WHITE_BALLANCE="/Selected Camera/Autonomous/White Ballance";
+	static final String AUTO_CAMERA_X_EXPOSURE="/Selected Camera/Autonomous/White Ballance";	
 	
-	static final String CAMERA_0_AUTOEXPOSURE="/Cameras/Camera 0/Enable Autoexposure";	
-	static final String CAMERA_0_AUTO_WHITE_BALLANCE="/Cameras/Camera 0/Enable Auto White Ballance";
-	static final String CAMERA_0_BRIGHTNESS="/Cameras/Camera 0/Brightness";	
-	static final String CAMERA_0_WHITE_BALLANCE="/Cameras/Camera 0/White Ballance";
-	static final String CAMERA_0_EXPOSURE="/Cameras/Camera 0/White Ballance";	
+	static final String TELEOP_CAMERA_X_AUTOEXPOSURE="/Selected Camera/Teleop/Enable Autoexposure";	
+	static final String TELEOP_CAMERA_X_AUTO_WHITE_BALLANCE="/Selected Camera/Teleop/Enable Auto White Ballance";
+	static final String TELEOP_CAMERA_X_BRIGHTNESS="/Selected Camera/Teleop/Brightness";	
+	static final String TELEOP_CAMERA_X_WHITE_BALLANCE="/Selected Camera/Teleop/White Ballance";
+	static final String TELEOP_CAMERA_X_EXPOSURE="/Selected Camera/Teleop/White Ballance";	
 	
-	static final String CAMERA_1_AUTOEXPOSURE="/Cameras/Camera 0/Enable Autoexposure";	
-	static final String CAMERA_1_AUTO_WHITE_BALLANCE="/Cameras/Camera 0/Enable Auto White Ballance";
-	static final String CAMERA_1_BRIGHTNESS="/Cameras/Camera 0/Brightness";	
-	static final String CAMERA_1_WHITE_BALLANCE="/Cameras/Camera 0/White Ballance";
-	static final String CAMERA_1_EXPOSURE="/Cameras/Camera 0/White Ballance";
-	
-	static final String CAMERA_2_AUTOEXPOSURE="/Cameras/Camera 0/Enable Autoexposure";	
-	static final String CAMERA_2_AUTO_WHITE_BALLANCE="/Cameras/Camera 0/Enable Auto White Ballance";
-	static final String CAMERA_2_BRIGHTNESS="/Cameras/Camera 0/Brightness";	
-	static final String CAMERA_2_WHITE_BALLANCE="/Cameras/Camera 0/White Ballance";
-	static final String CAMERA_2_EXPOSURE="/Cameras/Camera 0/White Ballance";
+	static final String SET_CAMERA_X_PARAMETERS="/Selected Camera/Choose selected camera parameters (Auto-0, Teleop=1";
+
 	// End Keys
-	
 	
 	static Thread visionThread;
 	static GearPipeline gearPipeline=new GearPipeline(GEAR_PLACEMENT_TABLE_NAME);
@@ -121,6 +131,31 @@ public class Vision2017 {
 	
 	static public void robotInit(){
 		table=NetworkTable.getTable(MAIN_TABLE);
+		
+		table.putBoolean(AUTO_CAMERA_X_AUTOEXPOSURE, table.getBoolean(AUTO_CAMERA_X_AUTOEXPOSURE, DEF_AUTO_CAMERA_X_AUTOEXPOSURE));
+		table.putBoolean(AUTO_CAMERA_X_AUTO_WHITE_BALLANCE, table.getBoolean(AUTO_CAMERA_X_AUTO_WHITE_BALLANCE, DEF_AUTO_CAMERA_X_AUTO_WHITE_BALLANCE));
+		table.putNumber(AUTO_CAMERA_X_BRIGHTNESS, table.getNumber(AUTO_CAMERA_X_BRIGHTNESS, DEF_AUTO_CAMERA_X_BRIGHTNESS));
+		table.putNumber(AUTO_CAMERA_X_EXPOSURE, table.getNumber(AUTO_CAMERA_X_EXPOSURE, DEF_AUTO_CAMERA_X_EXPOSURE));
+		table.putNumber(AUTO_CAMERA_X_WHITE_BALLANCE, table.getNumber(AUTO_CAMERA_X_WHITE_BALLANCE, DEF_AUTO_CAMERA_X_WHITE_BALLANCE));		
+		
+		table.putBoolean(TELEOP_CAMERA_X_AUTOEXPOSURE, table.getBoolean(TELEOP_CAMERA_X_AUTOEXPOSURE, DEF_TELEOP_CAMERA_X_AUTOEXPOSURE));
+		table.putBoolean(TELEOP_CAMERA_X_AUTO_WHITE_BALLANCE, table.getBoolean(TELEOP_CAMERA_X_AUTO_WHITE_BALLANCE, DEF_TELEOP_CAMERA_X_AUTO_WHITE_BALLANCE));
+		table.putNumber(TELEOP_CAMERA_X_BRIGHTNESS, table.getNumber(TELEOP_CAMERA_X_BRIGHTNESS, DEF_TELEOP_CAMERA_X_BRIGHTNESS));
+		table.putNumber(TELEOP_CAMERA_X_EXPOSURE, table.getNumber(TELEOP_CAMERA_X_EXPOSURE, DEF_TELEOP_CAMERA_X_EXPOSURE));
+		table.putNumber(TELEOP_CAMERA_X_WHITE_BALLANCE, table.getNumber(TELEOP_CAMERA_X_WHITE_BALLANCE, DEF_TELEOP_CAMERA_X_WHITE_BALLANCE));
+
+		table.setPersistent(AUTO_CAMERA_X_AUTOEXPOSURE);
+		table.setPersistent(AUTO_CAMERA_X_AUTO_WHITE_BALLANCE);
+		table.setPersistent(AUTO_CAMERA_X_BRIGHTNESS);
+		table.setPersistent(AUTO_CAMERA_X_EXPOSURE);
+		table.setPersistent(AUTO_CAMERA_X_WHITE_BALLANCE);
+		table.setPersistent(TELEOP_CAMERA_X_AUTOEXPOSURE);
+		table.setPersistent(TELEOP_CAMERA_X_AUTO_WHITE_BALLANCE);
+		table.setPersistent(TELEOP_CAMERA_X_BRIGHTNESS);
+		table.setPersistent(TELEOP_CAMERA_X_EXPOSURE);
+		table.setPersistent(TELEOP_CAMERA_X_WHITE_BALLANCE);
+		
+		table.putString(SET_CAMERA_X_PARAMETERS, DEF_SET_CAMERA_X_PARAMETERS);
 		if(enableCameraSwitch){
 		cameraID=table.getString(CAMERA_ID_KEY,"0");
 		
@@ -157,7 +192,17 @@ public class Vision2017 {
 			// lets the robot stop this thread when restarting robot code or
 			// deploying.
 			while (!Thread.interrupted()) {
-				
+				if(DriverStation.getInstance().isDisabled()){
+					switch(table.getString(SET_CAMERA_X_PARAMETERS, DEF_SET_CAMERA_X_PARAMETERS)){
+					case "0":
+						autonomousInit();
+						break;
+					default:
+					case "1":
+						telropInit();
+						break;
+					}
+				}
 				
 				// Tell the CvSink to grab a frame from the camera and put it
 				// in the source mat.  If there is an error notify the output.
@@ -204,7 +249,6 @@ public class Vision2017 {
 					}
 				}
 				
-				
 				// Put a rectangle on the image
 				if(!mat.empty()){
 				gearPipeline.process(mat);
@@ -242,9 +286,20 @@ public class Vision2017 {
 	}
 	
 	public static void autonomousInit(){
-		
+		int id=Integer.parseInt(cameraID);
+		if(table.getBoolean(AUTO_CAMERA_X_AUTOEXPOSURE, DEF_AUTO_CAMERA_X_AUTOEXPOSURE))camera[id].setExposureAuto();
+		if(table.getBoolean(AUTO_CAMERA_X_AUTO_WHITE_BALLANCE, DEF_AUTO_CAMERA_X_AUTO_WHITE_BALLANCE))camera[id].setWhiteBalanceAuto();
+		camera[id].setBrightness((int)table.getNumber(AUTO_CAMERA_X_BRIGHTNESS, DEF_AUTO_CAMERA_X_BRIGHTNESS));
+		camera[id].setExposureManual((int)table.getNumber(AUTO_CAMERA_X_EXPOSURE, DEF_AUTO_CAMERA_X_EXPOSURE));
+		camera[id].setWhiteBalanceManual((int)table.getNumber(AUTO_CAMERA_X_WHITE_BALLANCE, DEF_AUTO_CAMERA_X_WHITE_BALLANCE));
 	}	
 	public static void telropInit(){
+		int id=Integer.parseInt(cameraID);
+		if(table.getBoolean(TELEOP_CAMERA_X_AUTOEXPOSURE, DEF_TELEOP_CAMERA_X_AUTOEXPOSURE))camera[id].setExposureAuto();
+		if(table.getBoolean(TELEOP_CAMERA_X_AUTO_WHITE_BALLANCE, DEF_TELEOP_CAMERA_X_AUTO_WHITE_BALLANCE))camera[id].setWhiteBalanceAuto();
+		camera[id].setBrightness((int)table.getNumber(TELEOP_CAMERA_X_BRIGHTNESS, DEF_TELEOP_CAMERA_X_BRIGHTNESS));
+		camera[id].setExposureManual((int)table.getNumber(TELEOP_CAMERA_X_EXPOSURE, DEF_TELEOP_CAMERA_X_EXPOSURE));
+		camera[id].setWhiteBalanceManual((int)table.getNumber(TELEOP_CAMERA_X_WHITE_BALLANCE, DEF_TELEOP_CAMERA_X_WHITE_BALLANCE));
 		
 	}
 
