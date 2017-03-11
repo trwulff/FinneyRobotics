@@ -15,6 +15,7 @@ import cpi.auto.conditions.And;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.Compressor;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -29,7 +30,7 @@ public class Robot extends IterativeRobot {
    static public XBox360 pilot;
    
    DoubleSolenoid sol1;
-   
+   Compressor compressor;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -42,6 +43,8 @@ public class Robot extends IterativeRobot {
     	initialize();
     }
     void initialize(){
+    	compressor= new Compressor();
+    	compressor.start();
     	pilot=new XBox360(0);
     	Autonomous.robotInit();
     	drive= new Drive(cpi.Drive.DIRECT_TANK);
@@ -166,7 +169,7 @@ public class Robot extends IterativeRobot {
 //    	TestSimpleSpikeRelay.testPeriodic();
 //    	TestSimpleEncoder.testPeriodic();
 //    	drive.TestPeriodic();
-    	ShooterControl.testPeriodic();
+ //   	ShooterControl.testPeriodic();
     }
 
     /**

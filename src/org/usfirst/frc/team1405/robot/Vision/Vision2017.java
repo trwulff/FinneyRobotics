@@ -251,7 +251,6 @@ public class Vision2017 {
 				
 				// Put a rectangle on the image
 				if(!mat.empty()){
-				gearPipeline.process(mat);
 					
 //				blobPipeline.process(mat);
 				if(DriverStation.getInstance().isDisabled()){
@@ -259,9 +258,11 @@ public class Vision2017 {
 					switch(pipelineID){
 					default:
 					case "0":
+				gearPipeline.process(mat);
 						selectedOutput=gearPipeline.selectedOutput();
 						break;
 					case "1":
+						blobPipeline.process(mat);
 						selectedOutput=blobPipeline.selectedOutput();
 						break;
 					}
